@@ -6,7 +6,7 @@ This simulation uses a different formula for the force by always repulsing near 
 
 ## App
 
-
+[https://dickloraine.github.io/particle-life-wasm/](https://dickloraine.github.io/particle-life-wasm/)
 
 ## Code
 
