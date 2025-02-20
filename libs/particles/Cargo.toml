@@ -1,0 +1,18 @@
+[package]
+name = "particles"
+description = "An implemantation of particle life"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+readme.workspace = true
+repository.workspace = true
+
+[dependencies]
+rand = "0.9"
+rand_chacha = "0.9.0"
+getrandom = { version = "0.3.1", features = ["wasm_js"] }
+vector2d = "3.1.1"
+
+[dev-dependencies]
+approx = "0.4"

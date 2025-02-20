@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Particle Life</title>
+
+    <style>
+      :root {
+          color-scheme: dark;
+          background-color: #242424;
+          --canvas-bg-color: rgba(0, 0, 0, 0); /* transparent */
+      }
+      body {
+          display: flex;
+          margin: 0;
+          justify-content: center;
+          align-items: center;
+          min-width: 320px;
+          min-height: 100vh;
+      }
+      #canvas {
+          border: #504e52;
+          border-style: solid;
+          border-width: 5;
+          outline: none;  /* because of the 'tabindex' focus trick */
+          background-color: var(--canvas-bg-color);
+      }
+  </style>
+  </head>
+  <body>
+    <canvas id="canvas" tabindex="1"></canvas>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
