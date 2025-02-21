@@ -12,19 +12,15 @@ export class App {
   particles: Particles;
   gui: GUI;
   lastT: number;
-  exploration_timer: number;
   mediaRecorder: MediaRecorder | undefined;
-  running: boolean;
 
   constructor(canvasId: string, memory: WebAssembly.Memory) {
     this.settings = getSettings();
     this.canvas = new Canvas(canvasId);
     this.memory = memory;
     this.particles = new Particles(this.settings, this.canvas, this.memory);
-    this.running = false;
     this.gui = getGUI(this);
-    this.lastT = performance.now();
-    this.exploration_timer = 0;
+    this.lastT = 0;
   }
 
   run() {
