@@ -14,9 +14,7 @@ use quadtree::Quadtree;
 use repel::Repel;
 use scale_time::ScaleTime;
 
-const ZERO_VECTOR: Vector2D<f32> = Vector2D::new(0., 0.);
-
-#[derive(Default, Clone, Copy)]
+#[derive(Default, Clone, Copy, PartialEq)]
 pub struct Particle {
     pub pos: Vector2D<f32>,
     pub velocity: Vector2D<f32>,
@@ -225,10 +223,10 @@ fn get_force(
     let r2 = radii2[p.color];
 
     for neighbor in quadtree.query([p.pos.x, p.pos.y, r, r]) {
-        let dp: Vector2D<f32> = neighbor.pos - p.pos;
-        if dp == ZERO_VECTOR {
+        if *p == neighbor {
             continue;
         }
+        let dp: Vector2D<f32> = neighbor.pos - p.pos;
         let mut d = dp.length_squared();
         if d > r2 {
             continue;
