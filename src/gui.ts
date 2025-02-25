@@ -16,6 +16,9 @@ export const getGUI = (app: App): GUI => {
       app.randomRules();
     });
   configFolder
+    .add(app.particles, 'forceRadius', 1, settings.particles.maxRadius, 1)
+    .name('Force Radius');
+  configFolder
     .add(app.particles, 'seed')
     .name('Seed')
     .listen()

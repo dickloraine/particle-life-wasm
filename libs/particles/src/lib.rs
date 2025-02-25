@@ -40,6 +40,7 @@ pub struct Particles {
     pub rules: Vec2d,
     pub radii: Vec<f32>,
     pub radii2: Vec<f32>,
+    force_radius: f32,
     pub width: f32,
     pub height: f32,
     pub time_delta: f32,
@@ -68,7 +69,8 @@ impl Default for Particles {
             viscosity: 0.7,
             radii: Vec::new(),
             radii2: Vec::new(),
-            rules: Vec2d::new((4, 4)),
+            force_radius: 80.,
+            rules: Vec2d::default(),
             scale_time: ScaleTime::default(),
             explore: Explore::default(),
             repel: Repel::default(),
@@ -81,6 +83,7 @@ impl Particles {
     pub fn new(
         number_of_colors: usize,
         number_of_particles_per_color: usize,
+        force_radius: f32,
         time_delta: f32,
         viscosity: f32,
         max_radius: usize,
@@ -94,6 +97,7 @@ impl Particles {
             number_of_colors,
             number_of_particles_per_color,
             rules: Vec2d::new((number_of_colors, number_of_colors)),
+            force_radius,
             time_delta,
             viscosity,
             scale_time: ScaleTime::new(auto_scale_time, target_velocity),
@@ -182,8 +186,7 @@ impl Particles {
             Vec2d::from_fn_mut((self.number_of_colors, self.number_of_colors), &mut || {
                 self.rng.random::<f32>() * 2. - 1.
             });
-        self.radii = vec![80.; self.number_of_colors];
-        self.radii2 = vec![6400.; self.number_of_colors];
+        self.update_radii();
     }
 
     pub fn make_rules_symmetric(&mut self) {
@@ -196,6 +199,20 @@ impl Particles {
                 }
             }
         }
+    }
+
+    pub fn update_radii(&mut self) {
+        self.radii = vec![self.force_radius; self.number_of_colors];
+        self.radii2 = vec![self.force_radius.powf(2.); self.number_of_colors];
+    }
+
+    pub fn get_force_radius(&mut self) -> f32 {
+        self.force_radius
+    }
+
+    pub fn set_force_radius(&mut self, radius: f32) {
+        self.force_radius = radius;
+        self.update_radii();
     }
 
     pub fn new_seed(&mut self) {

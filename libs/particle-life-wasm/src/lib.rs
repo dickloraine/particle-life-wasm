@@ -15,6 +15,7 @@ impl ParticleLife {
     pub fn new(
         number_of_colors: usize,
         number_of_particles_per_color: usize,
+        force_radius: f32,
         time_delta: f32,
         viscosity: f32,
         auto_scale_time: bool,
@@ -30,6 +31,7 @@ impl ParticleLife {
         let particles = Particles::new(
             number_of_colors,
             number_of_particles_per_color,
+            force_radius,
             time_delta,
             viscosity,
             max_radius,
@@ -97,16 +99,10 @@ impl ParticleLife {
         Ok(serde_wasm_bindgen::to_value(&new)?)
     }
     pub fn set_radii(&mut self, radii: JsValue) {
-        match serde_wasm_bindgen::from_value(radii) {
+        match serde_wasm_bindgen::from_value::<Vec<f32>>(radii) {
             Ok(radii) => {
-                self.particles.radii = radii;
-                self.particles.radii2 = self
-                    .particles
-                    .radii
-                    .clone()
-                    .into_iter()
-                    .map(|r| r.powf(2.))
-                    .collect();
+                self.particles.radii = radii.clone();
+                self.particles.radii2 = radii.into_iter().map(|r| r.powf(2.)).collect();
             }
             Err(_) => return,
         };
@@ -129,6 +125,13 @@ impl ParticleLife {
 
     pub fn pulse(&mut self, x: f32, y: f32, duration: i32) {
         self.particles.pulse.set(x, y, duration);
+    }
+
+    pub fn get_force_radius(&mut self) -> f32 {
+        self.particles.get_force_radius()
+    }
+    pub fn set_force_radius(&mut self, force_radius: f32) {
+        self.particles.set_force_radius(force_radius);
     }
 
     pub fn get_time_delta(&mut self) -> f32 {

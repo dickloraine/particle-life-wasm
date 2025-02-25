@@ -21,6 +21,7 @@ export class Particles {
     this.particleLife = new ParticleLife(
       this.settings.particles.numColors,
       this.settings.particles.number_of_particles_per_color,
+      this.settings.particles.forceRadius,
       this.settings.particles.timeDelta,
       this.settings.particles.viscosity,
       this.settings.particles.autoScaleTime,
@@ -123,6 +124,14 @@ export class Particles {
   }
   newSeed() {
     return this.particleLife.new_seed();
+  }
+
+  get forceRadius() {
+    return this.particleLife.get_force_radius();
+  }
+  set forceRadius(value: number) {
+    this.particleLife.set_force_radius(value);
+    this.updateRadii();
   }
 
   get timeDelta() {

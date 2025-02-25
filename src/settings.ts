@@ -13,6 +13,7 @@ export type Settings = {
   particles: {
     numColors: number;
     number_of_particles_per_color: number;
+    forceRadius: number;
     timeDelta: number;
     viscosity: number;
     maxRadius: number;
@@ -40,6 +41,7 @@ export const getSettings = (): Settings => ({
   particles: {
     numColors: 4,
     number_of_particles_per_color: 1000,
+    forceRadius: 80,
     timeDelta: 0.01,
     viscosity: 0.7,
     autoScaleTime: false,
