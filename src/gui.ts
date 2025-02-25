@@ -16,9 +16,6 @@ export const getGUI = (app: App): GUI => {
       app.randomRules();
     });
   configFolder
-    .add(app.particles, 'forceRadius', 1, settings.particles.maxRadius, 1)
-    .name('Force Radius');
-  configFolder
     .add(app.particles, 'seed')
     .name('Seed')
     .listen()
@@ -27,11 +24,14 @@ export const getGUI = (app: App): GUI => {
     });
   configFolder.add(settings, 'fps').name('FPS - (Live)').listen().disable();
   configFolder
-    .add(app.particles, 'number_of_particles_per_color', 0, 4000, 50)
+    .add(app.particles, 'number_of_particles_per_color', 0, 10000, 500)
     .name('Atoms per-color')
     .onFinishChange(() => {
       app.particles.createParticles();
     });
+  configFolder
+    .add(app.particles, 'forceRadius', 1, settings.particles.maxRadius, 1)
+    .name('Force Radius');
   configFolder
     .add(app.particles, 'timeDelta', 0.0001, settings.maxDeltaTime, 0.0001)
     .name('Time Delta')
