@@ -7,12 +7,14 @@ mod pulse;
 mod quadtree;
 mod repel;
 mod scale_time;
+mod vec2d;
 
 use explore::Explore;
 use pulse::Pulse;
 use quadtree::Quadtree;
 use repel::Repel;
 use scale_time::ScaleTime;
+use vec2d::Vec2d;
 
 #[derive(Default, Clone, Copy, PartialEq)]
 pub struct Particle {
@@ -35,7 +37,7 @@ pub struct Particles {
     pub number_of_colors: usize,
     pub number_of_particles_per_color: usize,
     pub particles: Vec<Particle>,
-    pub rules: Vec<Vec<f32>>,
+    pub rules: Vec2d,
     pub radii: Vec<f32>,
     pub radii2: Vec<f32>,
     pub width: f32,
@@ -66,7 +68,7 @@ impl Default for Particles {
             viscosity: 0.7,
             radii: Vec::new(),
             radii2: Vec::new(),
-            rules: Vec::new(),
+            rules: Vec2d::new((4, 4)),
             scale_time: ScaleTime::default(),
             explore: Explore::default(),
             repel: Repel::default(),
@@ -91,6 +93,7 @@ impl Particles {
         Self {
             number_of_colors,
             number_of_particles_per_color,
+            rules: Vec2d::new((number_of_colors, number_of_colors)),
             time_delta,
             viscosity,
             scale_time: ScaleTime::new(auto_scale_time, target_velocity),
@@ -100,20 +103,16 @@ impl Particles {
         }
     }
 
-    fn create_particles(&mut self, count: usize, color: usize) {
-        for _ in 0..count {
-            self.particles.push(Particle::new(
-                self.rng.random::<f32>() * (self.width - 100.) + 50.,
-                self.rng.random::<f32>() * (self.height - 100.) + 50.,
-                color,
-            ));
-        }
-    }
-
     pub fn random_particles(&mut self) {
         self.particles.clear();
         for color in 0..self.number_of_colors {
-            self.create_particles(self.number_of_particles_per_color, color);
+            for _ in 0..self.number_of_particles_per_color {
+                self.particles.push(Particle::new(
+                    self.rng.random::<f32>() * (self.width - 100.) + 50.,
+                    self.rng.random::<f32>() * (self.height - 100.) + 50.,
+                    color,
+                ));
+            }
         }
     }
 
@@ -179,26 +178,21 @@ impl Particles {
     }
 
     pub fn make_random_rules(&mut self) {
-        self.rules.clear();
-        self.radii.clear();
-        self.radii2.clear();
-        for i in 0..self.number_of_colors {
-            self.rules.push(Vec::new());
-            for _ in 0..self.number_of_colors {
-                self.rules[i].push(self.rng.random::<f32>() * 2. - 1.);
-            }
-            self.radii.push(80.);
-            self.radii2.push(6400.);
-        }
+        self.rules =
+            Vec2d::from_fn_mut((self.number_of_colors, self.number_of_colors), &mut || {
+                self.rng.random::<f32>() * 2. - 1.
+            });
+        self.radii = vec![80.; self.number_of_colors];
+        self.radii2 = vec![6400.; self.number_of_colors];
     }
 
     pub fn make_rules_symmetric(&mut self) {
         for i in 0..self.number_of_colors {
             for j in 0..self.number_of_colors {
                 if j < i {
-                    let rule = 0.5 * (self.rules[i][j] + self.rules[j][i]);
-                    self.rules[i][j] = rule;
-                    self.rules[j][i] = rule;
+                    let rule = 0.5 * (self.rules.get(i, j) + self.rules.get(j, i));
+                    self.rules.set(i, j, rule);
+                    self.rules.set(j, i, rule);
                 }
             }
         }
@@ -213,7 +207,7 @@ impl Particles {
 
 fn get_force(
     p: &Particle,
-    rules: &Vec<Vec<f32>>,
+    rules: &Vec2d,
     radii: &Vec<f32>,
     radii2: &Vec<f32>,
     quadtree: &Quadtree,
@@ -231,7 +225,7 @@ fn get_force(
         if d > r2 {
             continue;
         }
-        let g = rules[p.color][neighbor.color];
+        let g = rules.get(p.color, neighbor.color);
         d = d.sqrt();
         let force = force_function(d / r, g);
         f += (dp * force) / d;

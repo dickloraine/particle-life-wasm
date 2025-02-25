@@ -1,6 +1,8 @@
 use rand::Rng;
 use rand_chacha::ChaCha8Rng;
 
+use crate::vec2d::Vec2d;
+
 pub struct Explore {
     pub enabled: bool,
     pub timer: usize,
@@ -24,7 +26,7 @@ impl Explore {
 
     pub fn apply(
         &mut self,
-        rules: &mut Vec<Vec<f32>>,
+        rules: &mut Vec2d,
         radii: &mut Vec<f32>,
         radii2: &mut Vec<f32>,
         rng: &mut ChaCha8Rng,
@@ -41,11 +43,15 @@ impl Explore {
         if rng.random::<f32>() >= 0.2 {
             let color_2: usize = rng.random_range(0..number_of_colors);
             let new_strength: f32 = rng.random();
-            rules[color_1][color_2] = if rules[color_1][color_2] > 0. {
-                -new_strength
-            } else {
-                new_strength
-            }
+            rules.set(
+                color_1,
+                color_2,
+                if rules.get(color_1, color_2) > 0. {
+                    -new_strength
+                } else {
+                    new_strength
+                },
+            );
         } else {
             let new_radius: f32 = rng.random_range(1..self.max_radius) as f32;
             radii[color_1] = new_radius;

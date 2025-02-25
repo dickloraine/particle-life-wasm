@@ -81,12 +81,13 @@ impl ParticleLife {
     }
 
     pub fn get_rules(&mut self) -> Result<JsValue, JsValue> {
-        let new = self.particles.rules.clone();
-        Ok(serde_wasm_bindgen::to_value(&new)?)
+        Ok(serde_wasm_bindgen::to_value(
+            &self.particles.rules.get_as_nested_vec(),
+        )?)
     }
     pub fn set_rules(&mut self, rules: JsValue) {
         match serde_wasm_bindgen::from_value(rules) {
-            Ok(rules) => self.particles.rules = rules,
+            Ok(rules) => self.particles.rules.from_nested_vec(rules),
             Err(_) => return,
         };
     }
