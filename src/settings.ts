@@ -3,7 +3,6 @@ export type Settings = {
   fps: number;
   drawings: {
     lines: boolean;
-    circle: boolean;
     background_color: string;
   };
   explore: boolean;
@@ -31,7 +30,6 @@ export const getSettings = (): Settings => ({
   drawings: {
     // Drawing options can be expensive on performance
     lines: false, // draw lines between atoms that are effecting each other
-    circle: false, // draw atoms as circles
     background_color: '#000000', // Background color
   },
   explore: false,

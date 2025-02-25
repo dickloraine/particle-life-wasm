@@ -54,7 +54,6 @@ export const getGUI = (app: App): GUI => {
   // Drawings
   const drawingsFolder = gui.addFolder('Drawings');
   drawingsFolder.add(app.particles, 'drawRadius', 1, 10, 0.5).name('Radius');
-  drawingsFolder.add(settings.drawings, 'circle').name('Circle Shape');
   drawingsFolder
     .addColor(settings.drawings, 'background_color')
     .name('Background Color');

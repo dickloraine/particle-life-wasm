@@ -73,10 +73,7 @@ export class Particles {
       const x = atoms[i];
       const y = atoms[i + 1];
       const color = this.settings.predefinedColors[Math.floor(atoms[i + 2])];
-
-      this.settings.drawings.circle
-        ? this.canvas.drawCircle(x, y, color, this.drawRadius)
-        : this.canvas.drawSquare(x, y, color, this.drawRadius);
+      this.canvas.drawCircle(x, y, color, this.drawRadius);
     }
   }
 

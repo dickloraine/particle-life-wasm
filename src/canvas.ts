@@ -27,11 +27,6 @@ export class Canvas {
     return this.canvas.height;
   }
 
-  drawSquare(x: number, y: number, color: string, radius: number) {
-    this.ctx.fillStyle = color;
-    this.ctx.fillRect(x - radius, y - radius, 2 * radius, 2 * radius);
-  }
-
   drawRectangle(x: number, y: number, width: number, height: number, color: string) {
     this.ctx.fillStyle = color;
     this.ctx.fillRect(x, y, width, height);
