@@ -37,7 +37,7 @@ pub struct Particles {
     number_of_colors: usize,
     number_of_particles_per_color: usize,
     pub particles: Vec<Particle>,
-    pub rules: Vec2d,
+    pub rules: Vec2d<f32>,
     pub radii: Vec<f32>,
     pub radii2: Vec<f32>,
     force_radius: f32,
@@ -245,7 +245,7 @@ impl Particles {
 
 fn get_force(
     p: &Particle,
-    rules: &Vec2d,
+    rules: &Vec2d<f32>,
     radii: &Vec<f32>,
     radii2: &Vec<f32>,
     quadtree: &Quadtree,
@@ -265,7 +265,7 @@ fn get_force(
         }
         let g = rules.get(p.color, neighbor.color);
         d = d.sqrt();
-        let force = force_function(d / r, g);
+        let force = force_function(d / r, *g);
         f += (dp * force) / d;
     }
     f * r

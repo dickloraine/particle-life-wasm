@@ -28,7 +28,7 @@ impl Explore {
 
     pub fn apply(
         &mut self,
-        rules: &mut Vec2d,
+        rules: &mut Vec2d<f32>,
         radii: &mut Vec<f32>,
         radii2: &mut Vec<f32>,
         rng: &mut ChaCha8Rng,
@@ -48,7 +48,7 @@ impl Explore {
             rules.set(
                 color_1,
                 color_2,
-                if rules.get(color_1, color_2) > 0. {
+                if *rules.get(color_1, color_2) > 0. {
                     -new_strength
                 } else {
                     new_strength
