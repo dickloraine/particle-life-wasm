@@ -34,8 +34,8 @@ impl Particle {
 }
 
 pub struct Particles {
-    pub number_of_colors: usize,
-    pub number_of_particles_per_color: usize,
+    number_of_colors: usize,
+    number_of_particles_per_color: usize,
     pub particles: Vec<Particle>,
     pub rules: Vec2d,
     pub radii: Vec<f32>,
@@ -200,6 +200,26 @@ impl Particles {
                 }
             }
         }
+    }
+
+    pub fn get_number_of_colors(&mut self) -> usize {
+        self.number_of_colors
+    }
+
+    pub fn set_number_of_colors(&mut self, value: usize) {
+        self.number_of_colors = value;
+        self.new_seed();
+        self.make_random_rules();
+        self.random_particles();
+    }
+
+    pub fn get_number_of_particles_per_color(&mut self) -> usize {
+        self.number_of_particles_per_color
+    }
+
+    pub fn set_number_of_particles_per_color(&mut self, value: usize) {
+        self.number_of_particles_per_color = value;
+        self.random_particles();
     }
 
     pub fn update_radii(&mut self) {

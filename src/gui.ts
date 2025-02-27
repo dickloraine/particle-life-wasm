@@ -13,7 +13,8 @@ export const getGUI = (app: App): GUI => {
     .add(app.particles, 'numColors', 1, 7, 1)
     .name('Number of Colors')
     .onFinishChange(() => {
-      app.randomRules();
+      app.setSeedToUrl();
+      app.updateGUIDisplay();
     });
   configFolder
     .add(app.particles, 'seed')
@@ -25,10 +26,7 @@ export const getGUI = (app: App): GUI => {
   configFolder.add(settings, 'fps').name('FPS - (Live)').listen().disable();
   configFolder
     .add(app.particles, 'number_of_particles_per_color', 0, 10000, 500)
-    .name('Atoms per-color')
-    .onFinishChange(() => {
-      app.particles.createParticles();
-    });
+    .name('Atoms per-color');
   configFolder
     .add(app.particles, 'forceRadius', 1, settings.particles.maxRadius, 1)
     .name('Force Radius');
@@ -50,7 +48,12 @@ export const getGUI = (app: App): GUI => {
   configFolder
     .add(app.particles, 'wallRepelStrength', 0, 20, 1)
     .name('Wall Repel Strength');
-  configFolder.add(app.particles, 'explore').name('Random Exploration');
+  configFolder
+    .add(app.particles, 'explore')
+    .name('Random Exploration')
+    .onFinishChange(() => {
+      app.particles.exploreTimer = 0;
+    });
   configFolder.add(app.particles, 'includeRadius').name('Include Radius');
   // Drawings
   const drawingsFolder = gui.addFolder('Drawings');

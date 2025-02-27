@@ -27,6 +27,7 @@ export class App {
     this.getSeedFromUrl();
     this.setupClicks();
     this.setupKeys();
+    this.updateDimensions();
     this.randomRules(true);
 
     console.log('settings', this.settings);
@@ -37,7 +38,17 @@ export class App {
   }
 
   update() {
-    this.canvas.updateDimensions();
+    this.updateDimensions();
+    this.drawBackground();
+    this.particles.update();
+    this.particles.draw();
+    this.updateRulesDisplay();
+    this.updateFPS();
+
+    requestAnimationFrame(() => this.update());
+  }
+
+  drawBackground() {
     this.canvas.drawRectangle(
       0,
       0,
@@ -45,12 +56,15 @@ export class App {
       this.canvas.height,
       this.settings.drawings.background_color
     );
-    this.particles.update();
-    this.particles.draw();
-    this.updateFPS();
-    this.updateRulesDisplay();
+  }
 
-    requestAnimationFrame(() => this.update());
+  updateDimensions() {
+    const new_width = window.innerWidth - 60;
+    const new_height = window.innerHeight - 60;
+    if (new_width !== this.canvas.width || new_height !== this.canvas.height) {
+      this.canvas.updateDimensions(new_width, new_height);
+      this.particles.updateDimensions();
+    }
   }
 
   updateFPS() {
@@ -68,10 +82,10 @@ export class App {
   randomRules(keepSeed = false) {
     if (!keepSeed) {
       this.particles.newSeed();
+      this.setSeedToUrl();
     }
     this.particles.makeRandomRules();
     this.particles.createParticles();
-    this.setSeedToUrl();
     this.updateGUIDisplay();
   }
 

@@ -9,12 +9,11 @@ export class Canvas {
     }
     this.canvas = canvas;
     this.ctx = ctx;
-    this.updateDimensions();
   }
 
-  updateDimensions() {
-    this.canvas.width = window.innerWidth - 60;
-    this.canvas.height = window.innerHeight - 60;
+  updateDimensions(new_width: number, new_height: number) {
+    this.canvas.width = new_width;
+    this.canvas.height = new_height;
     const ctx = this.canvas.getContext('2d');
     if (ctx) this.ctx = ctx;
   }

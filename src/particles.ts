@@ -9,7 +9,6 @@ export class Particles {
   particleArrayLength: number;
   particleLife: ParticleLife;
   drawRadius: number;
-  numberOfParticles: number;
   rules: number[][];
   radii: number[];
   exploreTimer: number;
@@ -32,7 +31,6 @@ export class Particles {
       this.settings.explore,
       this.settings.includeRadius
     );
-    this.numberOfParticles = this.numColors * this.number_of_particles_per_color;
     this.particleArrayLength = this.particleLife.particle_array_length();
     this.drawRadius = this.settings.particles.drawRadius;
     this.rules = this.particleLife.get_rules();
@@ -41,7 +39,6 @@ export class Particles {
   }
 
   createParticles() {
-    this.particleLife.set_dimensions(this.canvas.width, this.canvas.height);
     this.particleLife.random_particles();
     this.particleArrayLength = this.particleLife.particle_array_length();
   }
@@ -61,8 +58,11 @@ export class Particles {
     this.particleLife.update();
   }
 
-  draw() {
+  updateDimensions() {
     this.particleLife.set_dimensions(this.canvas.width, this.canvas.height);
+  }
+
+  draw() {
     const particlesPtr = this.particleLife.particles_pointer();
     const atoms = new Float32Array(
       this.memory.buffer,
@@ -103,7 +103,9 @@ export class Particles {
   }
   set numColors(value: number) {
     this.particleLife.set_number_of_colors(value);
-    this.numberOfParticles = this.numColors * this.number_of_particles_per_color;
+    this.rules = this.particleLife.get_rules();
+    this.radii = this.particleLife.get_radii();
+    this.particleArrayLength = this.particleLife.particle_array_length();
   }
 
   get number_of_particles_per_color() {
@@ -111,7 +113,7 @@ export class Particles {
   }
   set number_of_particles_per_color(value: number) {
     this.particleLife.set_number_of_particles_per_color(value);
-    this.numberOfParticles = this.numColors * this.number_of_particles_per_color;
+    this.particleArrayLength = this.particleLife.particle_array_length();
   }
 
   get seed() {

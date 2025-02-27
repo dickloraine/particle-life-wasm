@@ -183,17 +183,17 @@ impl ParticleLife {
     }
 
     pub fn get_number_of_colors(&mut self) -> usize {
-        self.particles.number_of_colors
+        self.particles.get_number_of_colors()
     }
     pub fn set_number_of_colors(&mut self, number_of_colors: usize) {
-        self.particles.number_of_colors = number_of_colors;
+        self.particles.set_number_of_colors(number_of_colors);
     }
 
     pub fn get_number_of_particles_per_color(&mut self) -> usize {
-        self.particles.number_of_particles_per_color
+        self.particles.get_number_of_particles_per_color()
     }
-    pub fn set_number_of_particles_per_color(&mut self, number_of_particles_per_color: usize) {
-        self.particles.number_of_particles_per_color = number_of_particles_per_color;
+    pub fn set_number_of_particles_per_color(&mut self, value: usize) {
+        self.particles.set_number_of_particles_per_color(value);
     }
 
     pub fn get_explore(&mut self) -> bool {
