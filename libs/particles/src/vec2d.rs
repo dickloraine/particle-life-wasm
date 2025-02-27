@@ -44,7 +44,7 @@ impl<T: std::clone::Clone> Vec2d<T> {
 
     pub fn from_nested_vec(&mut self, input: Vec<Vec<T>>) {
         let dim_1_size = input.len();
-        let dim_2_size = if dim_1_size > 0 { 0 } else { input[0].len() };
+        let dim_2_size = if dim_1_size > 0 { input[0].len() } else { 0 };
 
         self.size = (dim_1_size, dim_2_size);
         self.length = dim_1_size * dim_2_size;
