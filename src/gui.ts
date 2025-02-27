@@ -51,6 +51,7 @@ export const getGUI = (app: App): GUI => {
     .add(app.particles, 'wallRepelStrength', 0, 20, 1)
     .name('Wall Repel Strength');
   configFolder.add(app.particles, 'explore').name('Random Exploration');
+  configFolder.add(app.particles, 'includeRadius').name('Include Radius');
   // Drawings
   const drawingsFolder = gui.addFolder('Drawings');
   drawingsFolder.add(app.particles, 'drawRadius', 1, 10, 0.5).name('Radius');

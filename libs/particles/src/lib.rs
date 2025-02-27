@@ -92,6 +92,7 @@ impl Particles {
         wall_repel_distance: f32,
         wall_repel_strength: f32,
         explore_parameters: bool,
+        include_radius: bool,
     ) -> Self {
         Self {
             number_of_colors,
@@ -101,7 +102,7 @@ impl Particles {
             time_delta,
             viscosity,
             scale_time: ScaleTime::new(auto_scale_time, target_velocity),
-            explore: Explore::new(explore_parameters, 100, max_radius),
+            explore: Explore::new(explore_parameters, 100, max_radius, include_radius),
             repel: Repel::new(wall_repel_distance, wall_repel_strength),
             ..Particles::default()
         }

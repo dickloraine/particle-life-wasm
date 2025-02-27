@@ -7,20 +7,22 @@ pub struct Explore {
     pub enabled: bool,
     pub timer: usize,
     pub max_radius: usize,
+    pub include_radius: bool,
 }
 
 impl Default for Explore {
     fn default() -> Self {
-        Self::new(false, 100, 200)
+        Self::new(false, 100, 200, false)
     }
 }
 
 impl Explore {
-    pub fn new(enabled: bool, timer: usize, max_radius: usize) -> Self {
+    pub fn new(enabled: bool, timer: usize, max_radius: usize, include_radius: bool) -> Self {
         Self {
             enabled,
             timer,
             max_radius,
+            include_radius,
         }
     }
 
@@ -40,7 +42,7 @@ impl Explore {
             return;
         }
         let color_1: usize = rng.random_range(0..number_of_colors);
-        if rng.random::<f32>() >= 0.2 {
+        if !self.include_radius || rng.random::<f32>() >= 0.2 {
             let color_2: usize = rng.random_range(0..number_of_colors);
             let new_strength: f32 = rng.random();
             rules.set(

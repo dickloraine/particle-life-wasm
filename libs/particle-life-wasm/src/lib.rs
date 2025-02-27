@@ -24,6 +24,7 @@ impl ParticleLife {
         wall_repel_distance: f32,
         wall_repel_strength: f32,
         explore_parameters: bool,
+        include_radius: bool,
     ) -> Self {
         #[cfg(feature = "console_error_panic_hook")]
         console_error_panic_hook::set_once();
@@ -40,6 +41,7 @@ impl ParticleLife {
             wall_repel_distance,
             wall_repel_strength,
             explore_parameters,
+            include_radius,
         );
 
         Self {
@@ -199,5 +201,11 @@ impl ParticleLife {
     }
     pub fn set_explore(&mut self, explore_parameters: bool) {
         self.particles.explore.enabled = explore_parameters;
+    }
+    pub fn get_include_radius(&mut self) -> bool {
+        self.particles.explore.include_radius
+    }
+    pub fn set_include_radius(&mut self, include_radius: bool) {
+        self.particles.explore.include_radius = include_radius;
     }
 }

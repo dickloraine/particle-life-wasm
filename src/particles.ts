@@ -29,7 +29,8 @@ export class Particles {
       this.settings.particles.maxRadius,
       this.settings.particles.wallRepelDistance,
       this.settings.particles.wallRepelStrength,
-      this.settings.explore
+      this.settings.explore,
+      this.settings.includeRadius
     );
     this.numberOfParticles = this.numColors * this.number_of_particles_per_color;
     this.particleArrayLength = this.particleLife.particle_array_length();
@@ -180,5 +181,14 @@ export class Particles {
       this.exploreTimer = 0;
     }
     this.particleLife.set_explore(value);
+  }
+  get includeRadius() {
+    return this.particleLife.get_include_radius();
+  }
+  set includeRadius(value: boolean) {
+    if (value) {
+      this.exploreTimer = 0;
+    }
+    this.particleLife.set_include_radius(value);
   }
 }

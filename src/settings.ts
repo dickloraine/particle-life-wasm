@@ -6,6 +6,7 @@ export type Settings = {
     background_color: string;
   };
   explore: boolean;
+  includeRadius: boolean;
   pulseDuration: number;
   maxDeltaTime: number;
   predefinedColors: string[];
@@ -33,6 +34,7 @@ export const getSettings = (): Settings => ({
     background_color: '#000000', // Background color
   },
   explore: false,
+  includeRadius: false,
   pulseDuration: 10,
   maxDeltaTime: 0.05,
   predefinedColors: ['green', 'red', 'orange', 'cyan', 'magenta', 'lavender', 'teal'],
