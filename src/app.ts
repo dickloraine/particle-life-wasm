@@ -1,9 +1,9 @@
 import { GUI } from 'lil-gui';
 import { Canvas } from './canvas';
 import { getGUI } from './gui';
-import { Particles } from './particles';
+import { Particles, State } from './particles';
 import { getSettings, Settings } from './settings';
-import { dataURL_downloader, getMediaRecorder } from './utils';
+import { actOnUploadedTextFile, dataURL_downloader, getMediaRecorder } from './utils';
 
 export class App {
   settings: Settings;
@@ -13,6 +13,7 @@ export class App {
   gui: GUI;
   lastT: number;
   mediaRecorder: MediaRecorder | undefined;
+  state: string;
 
   constructor(canvasId: string, memory: WebAssembly.Memory) {
     this.settings = getSettings();
@@ -21,6 +22,7 @@ export class App {
     this.particles = new Particles(this.settings, this.canvas, this.memory);
     this.gui = getGUI(this);
     this.lastT = 0;
+    this.state = '';
   }
 
   run() {
@@ -157,16 +159,39 @@ export class App {
     document.title = 'Life #' + seed;
   }
 
+  saveState() {
+    const state = this.particles.getCurrentState();
+    const json = JSON.stringify(state);
+    const file = new Blob([json], { type: 'text/plain' });
+    const dataUrl = URL.createObjectURL(file);
+    dataURL_downloader(dataUrl, `particle_life_${this.particles.seed}.json`);
+    URL.revokeObjectURL(dataUrl);
+  }
+
+  loadState() {
+    actOnUploadedTextFile((text) => {
+      try {
+        const state = JSON.parse(text) as State;
+        // we don't validate, there is no server.
+        this.particles.setFromState(state);
+        this.setSeedToUrl();
+        this.updateGUIDisplay();
+      } catch {
+        console.error('Could not parse the given file!');
+      }
+    });
+  }
+
   exportImage() {
     const imageDataURL = this.canvas.canvas.toDataURL('png', 1);
-    dataURL_downloader(imageDataURL, `particle_life_${this.settings.seed}`);
+    dataURL_downloader(imageDataURL, `particle_life_${this.particles.seed}`);
   }
 
   exportVideo() {
     if (!this.mediaRecorder) {
       this.mediaRecorder = getMediaRecorder(
         this.canvas.canvas,
-        `particle_life_${this.settings.seed}`
+        `particle_life_${this.particles.seed}`
       );
     }
     this.mediaRecorder.state == 'recording'

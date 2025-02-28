@@ -18,21 +18,21 @@ export class Particles {
     this.canvas = canvas;
     this.memory = memory;
     this.particleLife = new ParticleLife(
-      this.settings.particles.numColors,
-      this.settings.particles.number_of_particles_per_color,
-      this.settings.particles.forceRadius,
-      this.settings.particles.timeDelta,
-      this.settings.particles.viscosity,
-      this.settings.particles.autoScaleTime,
-      this.settings.particles.targetVelocity,
-      this.settings.particles.maxRadius,
-      this.settings.particles.wallRepelDistance,
-      this.settings.particles.wallRepelStrength,
+      this.settings.numColors,
+      this.settings.number_of_particles_per_color,
+      this.settings.forceRadius,
+      this.settings.timeDelta,
+      this.settings.viscosity,
+      this.settings.autoScaleTime,
+      this.settings.targetVelocity,
+      this.settings.maxRadius,
+      this.settings.wallRepelDistance,
+      this.settings.wallRepelStrength,
       this.settings.explore,
       this.settings.includeRadius
     );
     this.particleArrayLength = this.particleLife.particle_array_length();
-    this.drawRadius = this.settings.particles.drawRadius;
+    this.drawRadius = this.settings.drawRadius;
     this.rules = this.particleLife.get_rules();
     this.radii = this.particleLife.get_radii();
     this.exploreTimer = 0;
@@ -193,4 +193,76 @@ export class Particles {
     }
     this.particleLife.set_include_radius(value);
   }
+
+  getCurrentState() {
+    return {
+      seed: this.particleLife.get_seed(),
+      numColors: this.particleLife.get_number_of_colors(),
+      number_of_particles_per_color:
+        this.particleLife.get_number_of_particles_per_color(),
+      forceRadius: this.particleLife.get_force_radius(),
+      timeDelta: this.particleLife.get_time_delta(),
+      viscosity: this.particleLife.get_viscosity(),
+      rules: this.particleLife.get_rules(),
+      radii: this.particleLife.get_radii(),
+      autoScaleTime: this.particleLife.get_auto_scale_time(),
+      targetVelocity: this.particleLife.get_target_velocity(),
+      wallRepelDistance: this.particleLife.get_wall_repel_distance(),
+      wallRepelStrength: this.particleLife.get_wall_repel_strength(),
+      explore: this.particleLife.get_explore(),
+      includeRadius: this.particleLife.get_include_radius(),
+      drawRadius: this.drawRadius,
+      pulseDuration: this.settings.pulseDuration,
+    };
+  }
+
+  setFromState(state: State) {
+    // set parameters
+    this.particleLife.set_number_of_colors(state.numColors);
+    this.particleLife.set_number_of_particles_per_color(
+      state.number_of_particles_per_color
+    );
+    this.particleLife.set_force_radius(state.forceRadius);
+    this.particleLife.set_time_delta(state.timeDelta);
+    this.particleLife.set_viscosity(state.viscosity);
+    this.particleLife.set_auto_scale_time(state.autoScaleTime);
+    this.particleLife.set_target_velocity(state.targetVelocity);
+    this.particleLife.set_wall_repel_distance(state.wallRepelDistance);
+    this.particleLife.set_wall_repel_strength(state.wallRepelStrength);
+    this.particleLife.set_explore(state.explore);
+    this.particleLife.set_include_radius(state.includeRadius);
+    this.drawRadius = state.drawRadius;
+    this.settings.pulseDuration = state.pulseDuration;
+
+    // recreate
+    this.particleLife.set_seed(state.seed);
+    this.particleLife.make_random_rules();
+    this.particleLife.random_particles();
+    this.particleLife.set_rules(state.rules);
+    this.particleLife.set_radii(state.radii);
+
+    // update properties
+    this.rules = this.particleLife.get_rules();
+    this.radii = this.particleLife.get_radii();
+    this.particleArrayLength = this.particleLife.particle_array_length();
+  }
 }
+
+export type State = {
+  seed: string;
+  numColors: number;
+  number_of_particles_per_color: number;
+  forceRadius: number;
+  timeDelta: number;
+  viscosity: number;
+  rules: any;
+  radii: any;
+  autoScaleTime: boolean;
+  targetVelocity: number;
+  wallRepelDistance: number;
+  wallRepelStrength: number;
+  drawRadius: number;
+  explore: boolean;
+  includeRadius: boolean;
+  pulseDuration: number;
+};

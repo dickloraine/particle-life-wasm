@@ -28,7 +28,7 @@ export const getGUI = (app: App): GUI => {
     .add(app.particles, 'number_of_particles_per_color', 0, 10000, 500)
     .name('Atoms per-color');
   configFolder
-    .add(app.particles, 'forceRadius', 1, settings.particles.maxRadius, 1)
+    .add(app.particles, 'forceRadius', 1, settings.maxRadius, 1)
     .name('Force Radius');
   configFolder
     .add(app.particles, 'timeDelta', 0.0001, settings.maxDeltaTime, 0.0001)
@@ -62,7 +62,9 @@ export const getGUI = (app: App): GUI => {
     .addColor(settings.drawings, 'background_color')
     .name('Background Color');
   // Export
-  const exportFolder = gui.addFolder('Export');
+  const exportFolder = gui.addFolder('Export / Import');
+  exportFolder.add(app, 'saveState').name('Save to file');
+  exportFolder.add(app, 'loadState').name('Load from file');
   exportFolder.add(app, 'exportImage').name('Image');
   exportFolder.add(app, 'exportVideo').name('Video: Start / stop');
   // Colors
@@ -83,7 +85,7 @@ export const getGUI = (app: App): GUI => {
           });
       }
       colorFolder
-        .add(app.particles.radii, `${i}`, 1, settings.particles.maxRadius, 5)
+        .add(app.particles.radii, `${i}`, 1, settings.maxRadius, 5)
         .name('Radius')
         .listen()
         .onFinishChange(() => {
