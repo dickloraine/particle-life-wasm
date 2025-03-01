@@ -3,7 +3,12 @@ import { Canvas } from './canvas';
 import { getGUI } from './gui';
 import { Particles, State } from './particles';
 import { getSettings, Settings } from './settings';
-import { actOnUploadedTextFile, dataURL_downloader, getMediaRecorder } from './utils';
+import {
+  actOnUploadedTextFile,
+  dataURL_downloader,
+  getMediaRecorder,
+  randomColor,
+} from './utils';
 
 export class App {
   settings: Settings;
@@ -13,7 +18,6 @@ export class App {
   gui: GUI;
   lastT: number;
   mediaRecorder: MediaRecorder | undefined;
-  state: string;
 
   constructor(canvasId: string, memory: WebAssembly.Memory) {
     this.settings = getSettings();
@@ -22,7 +26,6 @@ export class App {
     this.particles = new Particles(this.settings, this.canvas, this.memory);
     this.gui = getGUI(this);
     this.lastT = 0;
-    this.state = '';
   }
 
   run() {
@@ -137,6 +140,10 @@ export class App {
           this.symmetricRules();
           closed && this.gui.close();
           break;
+        case 'c':
+          this.randomColors();
+          closed && this.gui.close();
+          break;
         default:
           console.log(e.key);
       }
@@ -180,6 +187,23 @@ export class App {
         console.error('Could not parse the given file!');
       }
     });
+  }
+
+  randomColors() {
+    this.settings.drawings.colors = this.settings.drawings.colors.map(() =>
+      randomColor()
+    );
+    this.updateGUIDisplay();
+  }
+
+  addColor() {
+    this.settings.drawings.colors.push(randomColor());
+    this.updateGUIDisplay();
+  }
+
+  resetColors() {
+    this.settings.drawings.colors = [...this.settings.drawings.predefinedColors];
+    this.updateGUIDisplay();
   }
 
   exportImage() {

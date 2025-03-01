@@ -73,7 +73,7 @@ export class Particles {
     for (let i = 0; i < this.particleArrayLength; i += 3) {
       const x = atoms[i];
       const y = atoms[i + 1];
-      const color = this.settings.predefinedColors[Math.floor(atoms[i + 2])];
+      const color = this.settings.drawings.colors[Math.floor(atoms[i + 2])];
       this.canvas.drawCircle(x, y, color, this.drawRadius);
     }
   }
@@ -212,6 +212,7 @@ export class Particles {
       explore: this.particleLife.get_explore(),
       includeRadius: this.particleLife.get_include_radius(),
       drawRadius: this.drawRadius,
+      colors: this.settings.drawings.colors,
       pulseDuration: this.settings.pulseDuration,
     };
   }
@@ -232,6 +233,7 @@ export class Particles {
     this.particleLife.set_explore(state.explore);
     this.particleLife.set_include_radius(state.includeRadius);
     this.drawRadius = state.drawRadius;
+    this.settings.drawings.colors = state.colors;
     this.settings.pulseDuration = state.pulseDuration;
 
     // recreate
@@ -262,6 +264,7 @@ export type State = {
   wallRepelDistance: number;
   wallRepelStrength: number;
   drawRadius: number;
+  colors: string[];
   explore: boolean;
   includeRadius: boolean;
   pulseDuration: number;

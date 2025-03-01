@@ -10,7 +10,7 @@ export const getGUI = (app: App): GUI => {
   configFolder.add(app, 'randomRules').name('Random Rules');
   configFolder.add(app, 'symmetricRules').name('Make Rules Symmetric');
   configFolder
-    .add(app.particles, 'numColors', 1, 7, 1)
+    .add(app.particles, 'numColors', 1, settings.drawings.colors.length, 1)
     .name('Number of Colors')
     .onFinishChange(() => {
       app.setSeedToUrl();
@@ -58,9 +58,15 @@ export const getGUI = (app: App): GUI => {
   // Drawings
   const drawingsFolder = gui.addFolder('Drawings');
   drawingsFolder.add(app.particles, 'drawRadius', 1, 10, 0.5).name('Radius');
+  for (let i = 0; i < settings.drawings.colors.length; i++) {
+    drawingsFolder.addColor(settings.drawings.colors, `${i}`).name(`Color ${i + 1}`);
+  }
   drawingsFolder
     .addColor(settings.drawings, 'background_color')
     .name('Background Color');
+  drawingsFolder.add(app, 'randomColors').name('Random colors');
+  drawingsFolder.add(app, 'addColor').name('Add color');
+  drawingsFolder.add(app, 'resetColors').name('Reset colors');
   // Export
   const exportFolder = gui.addFolder('Export / Import');
   exportFolder.add(app, 'saveState').name('Save to file');
@@ -69,16 +75,17 @@ export const getGUI = (app: App): GUI => {
   exportFolder.add(app, 'exportVideo').name('Video: Start / stop');
   // Colors
   if (app.particles.rules.length > 0) {
+    const rulesFolder = gui.addFolder('Rules');
     for (let i = 0; i < app.particles.numColors; i++) {
-      const atomColor = settings.predefinedColors[i];
-      const colorFolder = gui.addFolder(
-        `Rules: <font color=\'${atomColor}\'>${atomColor}</font>`
+      const atomColor = settings.drawings.colors[i];
+      const colorFolder = rulesFolder.addFolder(
+        `<font color=\'${atomColor}\'>Color ${i + 1}</font>`
       );
       for (let j = 0; j < app.particles.numColors; j++) {
-        const ruleColor = settings.predefinedColors[j];
+        const ruleColor = settings.drawings.colors[j];
         colorFolder
           .add(app.particles.rules[i], `${j}`, -1, 1, 0.001)
-          .name(`<-> <font color=\'${ruleColor}\'>${capitalise(ruleColor)}</font>`)
+          .name(`<-> <font color=\'${ruleColor}\'>Color ${j + 1}</font>`)
           .listen()
           .onFinishChange(() => {
             app.particles.particleLife.set_rules(app.particles.rules);
@@ -96,7 +103,3 @@ export const getGUI = (app: App): GUI => {
 
   return gui;
 };
-
-function capitalise(word: string) {
-  return word.charAt(0).toUpperCase() + word.slice(1);
-}
