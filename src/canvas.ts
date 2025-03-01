@@ -1,6 +1,7 @@
 export class Canvas {
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
+
   constructor(canvasId: string) {
     const canvas = document.querySelector<HTMLCanvasElement>(canvasId);
     const ctx = canvas?.getContext('2d');
@@ -31,31 +32,10 @@ export class Canvas {
     this.ctx.fillRect(x, y, width, height);
   }
 
-  drawCircle(x: number, y: number, color: string, radius: number, fill = true) {
+  drawCircle(x: number, y: number, color: string, radius: number) {
     this.ctx.beginPath();
-    this.ctx.arc(x, y, radius, 0 * Math.PI, 2 * Math.PI); // x, y, radius, ArcStart, ArcEnd
-    this.ctx.closePath();
-    this.ctx.strokeStyle = this.ctx.fillStyle = color;
-    fill ? this.ctx.fill() : this.ctx.stroke();
-  }
-
-  drawLineBetweenPoints(ax: number, ay: number, bx: number, by: number, color: string) {
-    this.ctx.beginPath();
-    this.ctx.moveTo(ax, ay);
-    this.ctx.lineTo(bx, by);
-    this.ctx.closePath();
-    this.ctx.strokeStyle = color;
-    this.ctx.stroke();
-  }
-
-  drawCross(x: number, y: number, rx: number, ry: number, color: string) {
-    this.ctx.beginPath();
-    this.ctx.moveTo(x - rx, y);
-    this.ctx.lineTo(x + rx, y);
-    this.ctx.moveTo(x, y - ry);
-    this.ctx.lineTo(x, y + ry);
-    this.ctx.closePath();
-    this.ctx.strokeStyle = color;
-    this.ctx.stroke();
+    this.ctx.arc(x, y, radius, 0 * Math.PI, 2 * Math.PI);
+    this.ctx.fillStyle = color;
+    this.ctx.fill();
   }
 }
