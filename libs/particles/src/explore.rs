@@ -4,8 +4,8 @@ use rand_chacha::ChaCha8Rng;
 use crate::vec2d::Vec2d;
 
 pub struct Explore {
-    pub enabled: bool,
-    pub timer: usize,
+    enabled: bool,
+    timer: usize,
     pub max_radius: usize,
     pub include_radius: bool,
 }
@@ -60,5 +60,13 @@ impl Explore {
             radii2[color_1] = new_radius.powf(2.);
         }
         self.timer = 100;
+    }
+
+    pub fn get_enabled(&mut self) -> bool {
+        self.enabled
+    }
+    pub fn set_enabled(&mut self, value: bool) {
+        self.enabled = value;
+        self.timer = 0;
     }
 }

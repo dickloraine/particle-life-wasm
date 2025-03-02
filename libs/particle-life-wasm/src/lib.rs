@@ -197,10 +197,10 @@ impl ParticleLife {
     }
 
     pub fn get_explore(&mut self) -> bool {
-        self.particles.explore.enabled
+        self.particles.explore.get_enabled()
     }
     pub fn set_explore(&mut self, explore_parameters: bool) {
-        self.particles.explore.enabled = explore_parameters;
+        self.particles.explore.set_enabled(explore_parameters);
     }
     pub fn get_include_radius(&mut self) -> bool {
         self.particles.explore.include_radius
