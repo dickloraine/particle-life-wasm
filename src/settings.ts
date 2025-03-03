@@ -21,6 +21,22 @@ export type Settings = {
   wallRepelDistance: number;
   wallRepelStrength: number;
   drawRadius: number;
+  demoMode: {
+    enabled: boolean;
+    interval: number;
+    id: number;
+    maxNumberParticles: number;
+    minColors: number;
+    maxColors: number;
+    randomColors: boolean;
+    autoScaleTime: boolean;
+    targetVelocity: number;
+    oldAutoScaleTime: boolean;
+    oldTargetVelocity: number;
+    includeRadius: boolean;
+    oldForceRadius: number;
+    restoreSettings: boolean;
+  };
 };
 
 const predefinedColors = [
@@ -57,4 +73,20 @@ export const getSettings = (): Settings => ({
   wallRepelDistance: 40,
   wallRepelStrength: 3,
   drawRadius: 1.0,
+  demoMode: {
+    enabled: false,
+    interval: 20,
+    id: -1,
+    maxNumberParticles: 9000,
+    minColors: 3,
+    maxColors: 7,
+    randomColors: true,
+    autoScaleTime: true,
+    targetVelocity: 2.0,
+    oldAutoScaleTime: true,
+    oldTargetVelocity: 2.0,
+    includeRadius: false,
+    oldForceRadius: 80,
+    restoreSettings: false,
+  },
 });

@@ -8,6 +8,7 @@ import {
   dataURL_downloader,
   getMediaRecorder,
   randomColor,
+  randomInt,
 } from './utils';
 
 export class App {
@@ -87,8 +88,8 @@ export class App {
   randomRules(keepSeed = false) {
     if (!keepSeed) {
       this.particles.newSeed();
-      this.setSeedToUrl();
     }
+    this.setSeedToUrl();
     this.particles.makeRandomRules();
     this.particles.createParticles();
     this.updateGUIDisplay();
@@ -101,8 +102,10 @@ export class App {
   }
 
   updateGUIDisplay() {
+    const closed = this.gui._closed;
     this.gui.destroy();
     this.gui = getGUI(this);
+    closed && this.gui.close();
   }
 
   updateRulesDisplay() {
@@ -127,22 +130,21 @@ export class App {
 
   setupKeys() {
     this.canvas.canvas.addEventListener('keydown', (e) => {
-      const closed = this.gui._closed;
       switch (e.key) {
         case 'r':
           this.randomRules();
-          closed && this.gui.close();
           break;
         case 'o':
           this.reset();
           break;
         case 's':
           this.symmetricRules();
-          closed && this.gui.close();
           break;
         case 'c':
           this.randomColors();
-          closed && this.gui.close();
+          break;
+        case 'd':
+          this.toggleDemoMode();
           break;
         default:
           console.log(e.key);
@@ -154,7 +156,9 @@ export class App {
     let hash = window.location.hash;
     if (hash != undefined && hash[0] == '#') {
       let seed = hash.substring(1); // remove the leading '#'
-      if (isFinite(Number(seed))) {
+      if (seed === 'demo') {
+        this.toggleDemoMode();
+      } else if (isFinite(Number(seed))) {
         this.particles.seed = seed;
       }
     }
@@ -221,5 +225,73 @@ export class App {
     this.mediaRecorder.state == 'recording'
       ? this.mediaRecorder.stop()
       : this.mediaRecorder.start();
+  }
+
+  updateDemoMode() {
+    const colors = randomInt(
+      Math.min(this.settings.demoMode.minColors, this.settings.demoMode.maxColors),
+      Math.max(this.settings.demoMode.minColors, this.settings.demoMode.maxColors)
+    );
+    let scale = 1;
+
+    this.particles.numColors = colors;
+
+    if (this.settings.demoMode.includeRadius) {
+      const forceRadius = randomInt(20, 100);
+      scale = 80 / forceRadius;
+      this.particles.forceRadius = forceRadius;
+    }
+
+    this.particles.number_of_particles_per_color =
+      500 *
+      Math.floor((this.settings.demoMode.maxNumberParticles * scale) / (colors * 500));
+    this.setSeedToUrl();
+    if (this.settings.demoMode.randomColors) {
+      this.randomColors();
+    } else {
+      this.updateGUIDisplay();
+    }
+  }
+
+  setDemoInterval() {
+    this.settings.demoMode.id = setInterval(
+      () => this.updateDemoMode(),
+      this.settings.demoMode.interval * 1000
+    );
+  }
+
+  toggleDemoMode() {
+    this.settings.demoMode.enabled = !this.settings.demoMode.enabled;
+    if (this.settings.demoMode.enabled) {
+      this.startDemoMode();
+    } else {
+      this.endDemoMode();
+    }
+  }
+
+  startDemoMode() {
+    document.documentElement.requestFullscreen();
+    this.settings.demoMode.oldAutoScaleTime = this.particles.autoScaleTime;
+    this.settings.demoMode.oldTargetVelocity = this.particles.targetVelocity;
+    this.settings.demoMode.oldForceRadius = this.particles.forceRadius;
+    this.particles.autoScaleTime = this.settings.demoMode.autoScaleTime;
+    this.particles.targetVelocity = this.settings.demoMode.targetVelocity;
+    this.gui.close();
+    this.setDemoInterval();
+    setTimeout(() => {
+      this.updateDemoMode();
+    }, 200);
+  }
+
+  endDemoMode() {
+    clearInterval(this.settings.demoMode.id);
+    if (this.settings.demoMode.restoreSettings) {
+      this.particles.autoScaleTime = this.settings.demoMode.oldAutoScaleTime;
+      this.particles.targetVelocity = this.settings.demoMode.oldTargetVelocity;
+      this.particles.forceRadius = this.settings.demoMode.oldForceRadius;
+    }
+    this.updateGUIDisplay();
+    this.gui.open();
+    document.exitFullscreen();
   }
 }

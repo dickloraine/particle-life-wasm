@@ -25,7 +25,7 @@ export const getGUI = (app: App): GUI => {
     });
   configFolder.add(settings, 'fps').name('FPS - (Live)').listen().disable();
   configFolder
-    .add(app.particles, 'number_of_particles_per_color', 0, 10000, 500)
+    .add(app.particles, 'number_of_particles_per_color', 500, 10000, 500)
     .name('Atoms per-color');
   configFolder
     .add(app.particles, 'forceRadius', 1, settings.maxRadius, 1)
@@ -100,6 +100,29 @@ export const getGUI = (app: App): GUI => {
         });
     }
   }
+  const demoFolder = gui.addFolder('Demo Mode');
+  demoFolder
+    .add(app, 'toggleDemoMode')
+    .name(settings.demoMode.enabled ? 'Stop Demo Mode' : 'Start Demo Mode');
+  demoFolder
+    .add(settings.demoMode, 'interval', 5, 300, 5)
+    .name('Interval')
+    .onFinishChange(() => {
+      if (settings.demoMode.enabled) {
+        clearInterval(settings.demoMode.id);
+        app.setDemoInterval();
+      }
+    });
+  demoFolder
+    .add(settings.demoMode, 'maxNumberParticles', 1500, 20000, 500)
+    .name('Maximum Particles');
+  demoFolder.add(settings.demoMode, 'minColors', 1, 7, 1).name('Minimum colors');
+  demoFolder.add(settings.demoMode, 'maxColors', 1, 7, 1).name('Maximum colors');
+  demoFolder.add(settings.demoMode, 'randomColors').name('Random colors');
+  demoFolder.add(settings.demoMode, 'autoScaleTime').name('Auto Scale Time');
+  demoFolder.add(settings.demoMode, 'targetVelocity', 1, 10, 1).name('Target Velocity');
+  demoFolder.add(settings.demoMode, 'includeRadius').name('Random Radius');
+  demoFolder.add(settings.demoMode, 'restoreSettings').name('Restore Settings');
 
   return gui;
 };

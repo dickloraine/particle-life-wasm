@@ -246,6 +246,7 @@ export class Particles {
     // update properties
     this.rules = this.particleLife.get_rules();
     this.radii = this.particleLife.get_radii();
+    this.exploreTimer = 0;
     this.particleArrayLength = this.particleLife.particle_array_length();
   }
 }

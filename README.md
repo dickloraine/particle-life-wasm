@@ -8,6 +8,12 @@ This simulation uses a different formula for the force by always repulsing near 
 
 [https://dickloraine.github.io/particle-life-wasm/](https://dickloraine.github.io/particle-life-wasm/)
 
+#### Demo mode
+
+Start the app in demo mode (random new simulation every 20 seconds). You can toggle the domo mode through the gui or by pressing 'd'.
+
+[https://dickloraine.github.io/particle-life-wasm/#demo](https://dickloraine.github.io/particle-life-wasm/#demo)
+
 ## Code
 
 The main logic is written in rust. The libs/particles package contains all code needed to calculate particle-life and could be used by other backends.

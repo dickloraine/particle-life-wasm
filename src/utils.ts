@@ -91,10 +91,10 @@ function hslToHex(h: number, s: number, l: number): string {
   return `#${f(0)}${f(8)}${f(4)}`;
 }
 
-export function randomColor() {
-  const randomInt = (min: number, max: number) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  };
+export const randomInt = (min: number, max: number) => {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+};
 
+export function randomColor() {
   return hslToHex(randomInt(0, 360), randomInt(42, 98), randomInt(40, 90));
 }
